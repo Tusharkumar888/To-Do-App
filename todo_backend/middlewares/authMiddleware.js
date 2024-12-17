@@ -1,5 +1,5 @@
-const jwtToken = require("../auth-tokens/jwtToken")
-const jwt = require(process.env.JWT_SECRET);
+const jwtToken = process.env.JWT_SECRET
+const jwt = require("jsonwebtoken");
 
 
 const authMiddleware = (req, res, next) => {
