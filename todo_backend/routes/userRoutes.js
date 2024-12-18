@@ -160,30 +160,21 @@ userRoutes.post("/todo", authMiddleware, async (req, res) => {
 // get todo Schema
 const getTodoSchema = zod.object({
   taskId: zod.string(),
-  title: zod.string(),
 });
+
 // get the todo
 userRoutes.get("/todo", authMiddleware, async (req, res) => {
-  const body = req.body;
-  parsetodo = getTodoSchema.safeParse(body);
-  if (!parsetodo.success) {
-    return res.json({ mess: "todo does not exisit" });
+  const { taskId } = req.query;
+  const parsedTodo = getTodoSchema.safeParse({ taskId });
+  if (!parsedTodo.success) {
+    return res.status(400).json({ mess: "Invalid taskId" });
   }
 
-  const existingTodo = await ToDo.findOne({
-    title: parsetodo.data.title,
-    taskId: parsetodo.data.taskId,
-  });
-  if (!existingTodo) {
-    return res.json({ mess: "todo not found" });
+  const existingTodo = await ToDo.find({ taskId: parsedTodo.data.taskId });
+  if (existingTodo.length === 0) {
+    return res.status(404).json({ mess: "Todo not found" });
   }
   res.json(existingTodo);
-});
-
-//update todo status
-const UpdateTodoSchema = zod.object({
-  taskId: zod.string(),
-  title: zod.string(),
 });
 
 //upade todo route
@@ -221,34 +212,47 @@ const deleteTodoSchema = zod.object({
   title: zod.string(),
 });
 
-// delete todo request
+// Delete todo request
 userRoutes.delete("/todo", authMiddleware, async (req, res) => {
-  const taskId = req.query.taskId;  // Extract taskId from the query string
-  const title = req.query.title;    // Extract title from the query string
+  const { taskId, title } = req.query; // Extract taskId and title from query string
 
-  const parseBody = deleteTodoSchema.safeParse({
-    taskId: taskId,
-    title: title
-  });
+  // Validate the inputs using Zod
+  const parseResult = deleteTodoSchema.safeParse({ taskId, title });
 
-  if (!parseBody.success) {
-    return res.json({ mess: "invalid input" });
+  if (!parseResult.success) {
+    return res.status(400).json({
+      mess: "Invalid input",
+      errors: parseResult.error.errors, // Return validation errors
+    });
   }
 
-  let deleted = await ToDo.deleteOne({
-    taskId: parseBody.data.taskId,
-    title: parseBody.data.title,
-  });
+  try {
+    // Attempt to delete the todo
+    const result = await ToDo.deleteOne({
+      taskId: parseResult.data.taskId,
+      title: parseResult.data.title,
+    });
 
-  if (!deleted.acknowledged) {
-    return res.json({ mess: "unable to delete todo" });
+    // Check if any document was deleted
+    if (result.deletedCount === 0) {
+      return res.status(404).json({
+        mess: "Todo not found or already deleted",
+      });
+    }
+
+    // Return success response
+    res.status(200).json({
+      mess: "Todo has been deleted successfully",
+      deletedCount: result.deletedCount,
+    });
+  } catch (err) {
+    console.error(err.message);
+    res.status(500).json({
+      mess: "Internal server error",
+    });
   }
-
-  res.json({
-    mess: "todo has been deleted successfully",
-    deleted: deleted.deletedCount,
-  });
 });
+
 
 
 

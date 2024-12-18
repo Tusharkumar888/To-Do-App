@@ -7,7 +7,7 @@ export const ToDo = () => {
 
   return (
     <div
-      className={`w-screen h-[100vh] overflow-hidden  ${
+      className={`w-screen h-[100vh] overflow-y-auto overflow-x-hidden  ${
         bgColor == true ? " bg-white text-black border-spacing-2 border-orange-500 " : "bg-[#1B1B1B] "
       } `}
     >

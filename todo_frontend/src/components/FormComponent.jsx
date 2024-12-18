@@ -1,5 +1,5 @@
 import axios from "axios";
-import { useState } from "react";
+import { useState,useEffect } from "react";
 import { TodoListComponent } from "./todoListComponent";
 
 export const FormComponent = () => {
@@ -8,10 +8,41 @@ export const FormComponent = () => {
   const [priority, setPriority] = useState("");
   const [dates, setDates] = useState("");
   const [status, setStatus] = useState(false);
-  const [todos,setTodos] = useState([])
+  const [todos, setTodos] = useState([]);
+
+  useEffect(() => {
+    const fetchTodos = async () => {
+      try {
+        const response = await axios.get(
+          "https://to-do-app-rose-ten.vercel.app/api/v1/user/todo", 
+          {
+            params: {
+              taskId: localStorage.getItem("taskId"), // Use query params to send taskId
+            },
+            headers: {
+              Authorization: `Bearer ${localStorage.getItem("token")}`, // Authorization header
+            },
+          }
+        );
   
+        if (response.data && response.data.length > 0) {
+          setTodos(response.data); // If data is present, update the todos state
+        } else {
+          setTodos([]); // If no data, set todos to an empty array
+        }
+      } catch (err) {
+        console.log(err.message); // Log any errors
+      }
+    };
+  
+    fetchTodos(); // Call the fetchTodos function when the component mounts
+  }, []);
+  
+  
+  
+
   const handleSubmit = (event) => {
-    event.preventDefault(); 
+    event.preventDefault();
 
     if (!title || !description || !priority || !dates) {
       alert("Please fill out all fields.");
@@ -20,9 +51,9 @@ export const FormComponent = () => {
 
     axios
       .post(
-        "http://localhost:500/api/v1/user/todo",
+        "https://to-do-app-rose-ten.vercel.app/api/v1/user/todo",
         {
-          taskId:  localStorage.getItem("taskId"),
+          taskId: localStorage.getItem("taskId"),
           title,
           description,
           dueDate: dates,
@@ -31,7 +62,7 @@ export const FormComponent = () => {
         },
         {
           headers: {
-            Authorization:  `Bearer ${localStorage.getItem("token")}`,
+            Authorization: `Bearer ${localStorage.getItem("token")}`,
           },
         }
       )
@@ -58,7 +89,7 @@ export const FormComponent = () => {
           value={title}
           onChange={(e) => setTitle(e.target.value)}
           required
-          className=" md:w-[50%]  h-[5%] w-[90%] rounded px-2 border border-gray-600 "
+          className=" md:w-[50%]  h-[40px] w-[90%] rounded px-2 border border-gray-600 "
         />
 
         <input
@@ -68,7 +99,7 @@ export const FormComponent = () => {
           value={description}
           onChange={(e) => setDescription(e.target.value)}
           required
-          className=" md:w-[50%] w-[90%] h-[20%] border border-gray-600 rounded p-2 "
+          className=" md:w-[50%] w-[90%] h-[100px] border border-gray-600 rounded p-2 "
         />
         <div className="md:w-[50%] w-[90%] flex justify-between">
           <select
@@ -98,7 +129,10 @@ export const FormComponent = () => {
           </button>
         </div>
 
-        <TodoListComponent todos={todos} setTodos={setTodos}></TodoListComponent>
+        <TodoListComponent
+          todos={todos}
+          setTodos={setTodos}
+        ></TodoListComponent>
       </form>
     </div>
   );

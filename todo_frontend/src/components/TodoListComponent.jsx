@@ -8,7 +8,7 @@ export const TodoListComponent = ({ todos, setTodos }) => {
 
     axios
       .put(
-        "http://localhost:500/api/v1/user/todo",
+        "https://to-do-app-rose-ten.vercel.app/api/v1/user/todo",
         {
           taskId: todo.taskId, 
           title: todo.title,
@@ -41,11 +41,14 @@ export const TodoListComponent = ({ todos, setTodos }) => {
     event.preventDefault();
   
     axios
-      .delete(`http://localhost:500/api/v1/user/todo?taskId=${todo.taskId}?title=${todo.title}`, {
-        headers: {
-          Authorization: `Bearer ${localStorage.getItem("token")}`,
-        },
-      })
+      .delete(
+        `https://to-do-app-rose-ten.vercel.app/api/v1/user/todo?taskId=${todo.taskId}&title=${todo.title}`, // Use '&' to separate query params
+        {
+          headers: {
+            Authorization: `Bearer ${localStorage.getItem("token")}`,
+          },
+        }
+      )
       .then((response) => {
         // Update the state by removing the deleted todo
         setTodos((prevTodos) => prevTodos.filter((_, i) => i !== index));
@@ -56,6 +59,7 @@ export const TodoListComponent = ({ todos, setTodos }) => {
         alert("Failed to delete task. Please try again.");
       });
   };
+  
   
   
 

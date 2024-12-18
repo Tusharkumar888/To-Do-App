@@ -12,8 +12,8 @@ export const TodoNavBar = ({bgColor, setBgcolor}) =>{
                 logout()
             }} />
         </div>
-        <div className=" md:text-3xl text-2xl text-orange-500 font-PatrickHand ">
-            <p>TO-DO-APP</p>
+        <div className=" md:text-3xl text-xl text-orange-500 font-PatrickHand ">
+            <p >TO-DO-APP</p>
         </div>
         <div className=" cursor-pointer flex gap-6   ">
                 <div onClick={()=>{
@@ -24,7 +24,10 @@ export const TodoNavBar = ({bgColor, setBgcolor}) =>{
                     }
                 </div>
                 <div className="">
+                    <a href="https://github.com/Tusharkumar888/To-Do-App" target="blank">
+                    
                     <img  className=" hover:scale-110 transition-all duration-300 cursor-pointer" src="https://img.icons8.com/external-those-icons-flat-those-icons/40/external-GitHub-Logo-social-media-those-icons-flat-those-icons.png" alt="" />
+                    </a>
                 </div>
                 
         </div>
