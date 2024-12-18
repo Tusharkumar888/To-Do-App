@@ -1,6 +1,6 @@
 import axios from "axios";
 import { useState,useEffect } from "react";
-import {TodoListComponent} from "./todoListComponent";
+import { ListComponent } from "./ListComponent";
 
 
 export const FormComponent = () => {
@@ -130,10 +130,10 @@ export const FormComponent = () => {
           </button>
         </div>
 
-        <TodoListComponent
+        <ListComponent
           todos={todos}
           setTodos={setTodos}
-        ></TodoListComponent>
+        ></ListComponent>
       </form>
     </div>
   );

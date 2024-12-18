@@ -1,6 +1,6 @@
 import axios from "axios";
 
-export const TodoListComponent = ({ todos, setTodos }) => {
+export const ListComponent = ({ todos, setTodos }) => {
 
   //upade handeler 
   const handleUpdate = (todo, index) => (event) => {

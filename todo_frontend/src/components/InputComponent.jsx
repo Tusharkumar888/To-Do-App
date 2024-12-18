@@ -4,3 +4,4 @@ export const InputComponent = ({onChange,inputs}) =>{
     <input onChange={onChange} type="text" id="userInput" placeholder= ""  className="border-2 border-gray-400 rounded-lg ... relative w-[100%] h-10 shadow-inner"/>
     </div>
 }
+
