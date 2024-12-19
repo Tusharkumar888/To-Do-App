@@ -66,5 +66,5 @@ Ensure you have the following software installed on your system:
 
 1. **Clone the repository**:
    ```bash
-   git clone https://github.com/your-username/todo-list.git
+   git clone https://github.com/Tusharkumar888/To-Do-App
    cd todo-list
